@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using MailKit.Net.Smtp;
 using MimeKit;
-using System.Net.Mail;
 
 Console.WriteLine("Hello, World!");
 
@@ -32,5 +32,23 @@ message.Body = bodyEmail.ToMessageBody();
 /*Sending the email*/
 using (SmtpClient smtpClient = new SmtpClient())
 {
-    smtpClient
+    try
+    {
+        // - Connexion au serveur Smtp
+        smtpClient.Connect(smtpHost, smtpPort, false);
+
+        // - Authentification
+        smtpClient.Authenticate("DellaMail", "Test1234=");
+
+        // - Envoi du mail 
+        smtpClient.Send(message);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+    finally
+    {
+        smtpClient.Disconnect(true);
+    }
 }
